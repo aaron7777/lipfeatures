@@ -1,0 +1,6 @@
+/Users/xinxu/Desktop/mouthDetect/LandMark/build/CMakeFiles/edit_cache.dir
+/Users/xinxu/Desktop/mouthDetect/LandMark/build/CMakeFiles/rebuild_cache.dir
+/Users/xinxu/Desktop/mouthDetect/LandMark/build/CMakeFiles/landmark.dir
+/Users/xinxu/Desktop/mouthDetect/LandMark/build/dlib_build/CMakeFiles/edit_cache.dir
+/Users/xinxu/Desktop/mouthDetect/LandMark/build/dlib_build/CMakeFiles/rebuild_cache.dir
+/Users/xinxu/Desktop/mouthDetect/LandMark/build/dlib_build/CMakeFiles/dlib.dir
