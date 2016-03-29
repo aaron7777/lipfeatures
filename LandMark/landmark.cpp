@@ -37,19 +37,23 @@
     2011.  SSE4 is the next fastest and is supported by most current machines.  
 */
 
-
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing/render_face_detections.h>
 #include <dlib/image_processing.h>
 #include <dlib/gui_widgets.h>
 #include <dlib/image_io.h>
+#include <dlib/opencv.h>
+
 #include <iostream>
 
-#include <dlib/opencv.h>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/core/mat.hpp>
 
 using namespace dlib;
 using namespace std;
+using namespace cv;
 
 // ----------------------------------------------------------------------------------------
 
@@ -89,37 +93,61 @@ int main(int argc, char** argv)
         while(!win.is_closed())
         {
             // Grab a frame
-            cv::Mat temp;
-            cap >> temp;
+            cv::Mat frame;
+            cap >> frame;
             // Turn OpenCV's Mat into something dlib can deal with.  Note that this just
             // wraps the Mat object, it doesn't copy anything.  So cimg is only valid as
-            // long as temp is valid.  Also don't do anything to temp that would cause it
+            // long as frame is valid.  Also don't do anything to frame that would cause it
             // to reallocate the memory which stores the image as that will make cimg
-            // contain dangling pointers.  This basically means you shouldn't modify temp
+            // contain dangling pointers.  This basically means you shouldn't modify frame
             // while using cimg.
-            cv_image<bgr_pixel> cimg(temp);
+            cv_image<bgr_pixel> cimg(frame);
 
             // Detect faces 
-            std::vector<rectangle> faces = detector(cimg);
+            std::vector<dlib::rectangle> faces = detector(cimg);
+
             // Find the pose of each face. 
             // Here: only one face.
             std::vector<full_object_detection> shapes;
+            std::vector<dlib::image_window::overlay_line> lines;
+            const rgb_pixel color = rgb_pixel(0,255,0);
+
             for (unsigned long i = 0; i < faces.size(); ++i) {
-                shapes.push_back(sp(cimg, faces[i]));
+
+                full_object_detection shape = sp(cimg, faces[i]);
+
+                for (unsigned long m = 49; m <= 59; ++m)
+                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+                lines.push_back(image_window::overlay_line(shape.part(48), shape.part(59), color));
+                for (unsigned long m = 61; m <= 67; ++m)
+                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+                lines.push_back(image_window::overlay_line(shape.part(60), shape.part(67), color));
+
+                shapes.push_back(shape);
             }
             
-            //dlib:: array2d<rgb_pixel> face_chips;    
-            //extract_image_chip(cimg, get_face_chip_details(shapes[0]), face_chips);
-            point_transform_affine p = get_mapping_to_chip(get_face_chip_details(shapes[0]));
-            point point_in_chip = p(shapes[0].part(1));
-
-
-            // Display it all on the screen
+            // Now let's view our face poses on the screen.
             win.clear_overlay();
             win.set_image(cimg);
-            win.add_overlay(render_face_detections(shapes));
+            //win.add_overlay(render_face_detections(shapes));
+            win.add_overlay(lines);
+      
 
+            // We can also extract copies of each face that are cropped, rotated upright,
+            // and scaled to a standard size as shown here:
+            dlib::array<array2d<rgb_pixel> > face_chips;
+            std::vector<chip_details> face_details;
+            face_details = get_face_chip_details(shapes, 100, 0.2);
+            extract_image_chips(cimg, face_details, face_chips);
+            win_faces.set_image(tile_images(face_chips));
 
+            point_transform_affine p = get_mapping_to_chip(face_details[0]);
+            
+            point point_in_chip;
+            for (int k = 0; k < 68; k++){
+                point_in_chip = p(shapes[0].part(k));
+                cout<< "Point " << k+1 << " x = " << point_in_chip.x() << " y = " << point_in_chip.y() << endl;
+            }
 
         }
     }
