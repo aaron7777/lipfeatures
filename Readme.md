@@ -15,17 +15,27 @@ Based on the result of face detection, four lip corners (left, right, highest an
 With lips features of each frame, lips motion is recorded according to the time line. Frequency of lip pressing/biting or smiling can be analyzed to help judge whether a person is telling the truth or lying. 
 #### Difficulties
 * Low quality video files with noise.
+* Limited number of raw videos.
 * Faces with rotation/different sizes caused by camera position and describer's movement.
 * Fast and accurate computation needed to avoid latency
 
-
 ###BACKGROUND
+
+####OpenCV (version 2.4.12)
+A library aimed at real-time computer vision. Used for frame capture and basic image processing.
+
+####Dlib (version 18.18)
+An open source software written in C++, containing software components for dealing with image processing. Dlib is used for face detection and feature extraction.
+
+####Xlib (XQuartz version 2.7.8)
+A library that allows you to draw graphics on the screen of any X server using C language. XQuartz is the MAC version of X server, and X server is a component of the  X Window System, providing framework for a GUI enviroment. Xlib is used to showing and drawing image windows to indicate lips features on the face.
+
 
 ###METHODS
 
 ###COMPILING
 
-####TEST
+###TEST
 
 ###FUTURE WORK
 
