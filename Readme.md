@@ -68,5 +68,6 @@ The future work is to apply the extracted lips features to deception detection. 
 
 ###REFERENCE
 
-- [Dlib example program](http://dlib.net/face_landmark_detection_ex.cpp.html)
-
+- [Dlib example program - face_landmark_detection](http://dlib.net/face_landmark_detection_ex.cpp.html)
+- [Dlib image processing header file - fender_face_detections.h](http://dlib.net/dlib/image_processing/render_face_detections.h.html)
+- [Shaowei Su's Eye-Activity Level Program](https://github.com/shaowei-su/Eye_Activity_Level)
