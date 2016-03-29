@@ -34,7 +34,7 @@ A library that allows you to draw graphics on the screen of any X server using C
 ####Face Components Detection
 Face detector is made using the classic Histogram of Oriented Gradients (HOG) feature combined with a linear classifier, an image pyramid,
 and sliding window detection scheme. Dlib provides a "shape_predictor_68_face_landmarks.dat" model, based on the iBUG 300-W dataset. The dataset has more than 10,000 images annotated with the 68-point convention.
-![ScreenShot](https://raw.githubusercontent.com/xinxu/lipsfeatures/pic/figure_68_markup.jpg)
+![ScreenShot](https://raw.githubusercontent.com/xinxu/lipfeatures/pic/figure_68_markup.jpg)
 
 ####Normalization & Feature Extraction
 
