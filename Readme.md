@@ -28,10 +28,17 @@ A library aimed at real-time computer vision. Used for frame capture and basic i
 An open source software written in C++, containing software components for dealing with image processing. Dlib is used for face detection and feature extraction.
 
 ####Xlib (XQuartz version 2.7.8)
-A library that allows you to draw graphics on the screen of any X server using C language. XQuartz is the MAC version of X server, and X server is a component of the  X Window System, providing framework for a GUI enviroment. Xlib is used to showing and drawing image windows to indicate lips features on the face.
-
+A library that allows you to draw graphics on the screen of any X server using C language. XQuartz is the Apple Inc. version of X server, and X server is a component of the  X Window System, providing framework for a GUI enviroment. Xlib is used to showing and drawing image windows to indicate lips features on the face.
 
 ###METHODS
+####Face Components Detection
+Face detector is made using the classic Histogram of Oriented Gradients (HOG) feature combined with a linear classifier, an image pyramid,
+and sliding window detection scheme. Dlib provides a "shape_predictor_68_face_landmarks.dat" model, based on the iBUG 300-W dataset. The dataset has more than 10,000 images annotated with the 68-point convention.
+![ScreenShot](https://raw.githubusercontent.com/xinxu/lipsfeatures/pic/figure_68_markup.jpg)
+
+####Normalization & Feature Extraction
+
+
 
 ###COMPILING
 
