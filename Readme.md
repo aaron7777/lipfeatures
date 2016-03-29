@@ -35,6 +35,7 @@ A library that allows you to draw graphics on the screen of any X server using C
 Face detector is made using the classic Histogram of Oriented Gradients (HOG) feature combined with a linear classifier, an image pyramid,
 and sliding window detection scheme. Dlib provides a "shape_predictor_68_face_landmarks.dat" model, based on the iBUG 300-W dataset. The dataset has more than 10,000 images annotated with the 68-point convention.
 ![ScreenShot](https://github.com/aaron7777/lipfeatures/blob/master/pic/figure_68_markup.jpg)
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/pic/figure_68_markup.jpg" width="400px" height="188px">
 
 ####Normalization & Feature Extraction
 
