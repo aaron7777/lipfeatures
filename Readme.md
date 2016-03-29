@@ -13,6 +13,11 @@ For an input raw video, the program can capture each frame. For each frame, face
 Based on the result of face detection, four lip corners (left, right, highest and lowest) positions are extracted based on face normalization.
 ####Step 3 - Analysis of Lips Motion
 With lips features of each frame, lips motion is recorded according to the time line. Frequency of lip pressing/biting or smiling can be analyzed to help judge whether a person is telling the truth or lying. 
+#### Difficulties
+* Low quality video files with noise.
+* Faces with rotation/different sizes caused by camera position and describer's movement.
+* Fast and accurate computation needed to avoid latency
+
 
 ###BACKGROUND
 
