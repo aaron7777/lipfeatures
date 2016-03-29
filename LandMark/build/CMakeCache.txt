@@ -254,7 +254,7 @@ PNG_PNG_INCLUDE_DIR:PATH=/usr/local/include
 USE_AVX_INSTRUCTIONS:BOOL=OFF
 
 //Compile your program with SSE2 instructions
-USE_SSE2_INSTRUCTIONS:BOOL=ON
+USE_SSE2_INSTRUCTIONS:BOOL=OFF
 
 //Compile your program with SSE4 instructions
 USE_SSE4_INSTRUCTIONS:BOOL=OFF
