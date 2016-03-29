@@ -45,6 +45,7 @@
 #include <dlib/opencv.h>
 
 #include <iostream>
+#include <fstream>
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
@@ -87,7 +88,11 @@ int main(int argc, char** argv)
         shape_predictor sp;
         deserialize(argv[1]) >> sp;
 
+        // File to record lipfeatures 
+        ofstream outfile;
+        outfile.open("/Users/xinxu/Desktop/lipfeatures/LandMark/lipdata.txt");
 
+        int frameCounter = 0;
         image_window win_faces;
          // Grab and process frames until the main window is closed by the user.
         while(!win.is_closed())
@@ -107,7 +112,7 @@ int main(int argc, char** argv)
             std::vector<dlib::rectangle> faces = detector(cimg);
 
             // Find the pose of each face. 
-            // Here: only one face.
+            // Here: there is only one face.
             std::vector<full_object_detection> shapes;
             std::vector<dlib::image_window::overlay_line> lines;
             const rgb_pixel color = rgb_pixel(0,255,0);
@@ -115,22 +120,57 @@ int main(int argc, char** argv)
             for (unsigned long i = 0; i < faces.size(); ++i) {
 
                 full_object_detection shape = sp(cimg, faces[i]);
+                /* Rectangles of each part of face */
+                /*
+                for (unsigned long m = 1; m <= 16; ++m) // Face
+                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
 
-                for (unsigned long m = 49; m <= 59; ++m)
+                for (unsigned long m = 28; m <= 30; ++m) // Nose (Upper)
+                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+
+                for (unsigned long m = 18; m <= 21; ++m) // Left Brow
+                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+
+                for (unsigned long m = 23; m <= 26; ++m) // Right Brow
+                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+
+                for (unsigned long m = 31; m <= 35; ++m) // Nose (Lower)
+                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+                lines.push_back(image_window::overlay_line(shape.part(30), shape.part(35), color));
+
+                for (unsigned long m = 37; m <= 41; ++m) // Left Eye
+                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+                lines.push_back(image_window::overlay_line(shape.part(36), shape.part(41), color));
+
+                for (unsigned long m = 43; m <= 47; ++m) // Right Eye
+                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+                lines.push_back(image_window::overlay_line(shape.part(42), shape.part(47), color));*/
+
+                for (unsigned long m = 49; m <= 59; ++m) // Lip (Outer)
                     lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
                 lines.push_back(image_window::overlay_line(shape.part(48), shape.part(59), color));
-                for (unsigned long m = 61; m <= 67; ++m)
+
+                for (unsigned long m = 61; m <= 67; ++m) // Lip (Inner)
                     lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
                 lines.push_back(image_window::overlay_line(shape.part(60), shape.part(67), color));
+
+                // Four points to be recorded (48, 51, 54, 57) 
+                /*
+                lines.push_back(image_window::overlay_line(shape.part(48), shape.part(51), color));
+                lines.push_back(image_window::overlay_line(shape.part(51), shape.part(54), color));
+                lines.push_back(image_window::overlay_line(shape.part(54), shape.part(57), color));
+                lines.push_back(image_window::overlay_line(shape.part(57), shape.part(48), color));*/
 
                 shapes.push_back(shape);
             }
             
-            // Now let's view our face poses on the screen.
+            // Now let's view lines of lips on the screen.
             win.clear_overlay();
             win.set_image(cimg);
-            //win.add_overlay(render_face_detections(shapes));
             win.add_overlay(lines);
+
+            // View the entire face
+            //win.add_overlay(render_face_detections(shapes));
       
 
             // We can also extract copies of each face that are cropped, rotated upright,
@@ -139,17 +179,40 @@ int main(int argc, char** argv)
             std::vector<chip_details> face_details;
             face_details = get_face_chip_details(shapes, 100, 0.2);
             extract_image_chips(cimg, face_details, face_chips);
+
+            // View the scaled/normalized face 
             win_faces.set_image(tile_images(face_chips));
 
+            // Map the point from the original face to the normalized one
             point_transform_affine p = get_mapping_to_chip(face_details[0]);
-            
-            point point_in_chip;
-            for (int k = 0; k < 68; k++){
-                point_in_chip = p(shapes[0].part(k));
-                cout<< "Point " << k+1 << " x = " << point_in_chip.x() << " y = " << point_in_chip.y() << endl;
-            }
 
+            // Record the landmarks(lip features) needed to the file 
+            point point_in_chip1, point_in_chip2, point_in_chip3, point_in_chip4;
+            point_in_chip1 = p(shapes[0].part(48));
+            point_in_chip2 = p(shapes[0].part(51));
+            point_in_chip3 = p(shapes[0].part(54));
+            point_in_chip4 = p(shapes[0].part(57));
+
+            outfile << frameCounter++;
+            outfile << ",";
+            outfile << point_in_chip1.x();
+            outfile << ",";
+            outfile << point_in_chip1.y();
+            outfile << ",";
+            outfile << point_in_chip2.x();
+            outfile << ",";
+            outfile << point_in_chip2.y();
+            outfile << ",";
+            outfile << point_in_chip3.x();
+            outfile << ",";
+            outfile << point_in_chip3.y();
+            outfile << ",";
+            outfile << point_in_chip4.x();
+            outfile << ",";
+            outfile << point_in_chip4.y();
+            outfile << endl;
         }
+        outfile.close();
     }
     catch (exception& e)
     {
