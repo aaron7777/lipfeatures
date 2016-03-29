@@ -60,7 +60,7 @@ The test result is satisfying. The small window stands for the normalized face.
 
 The following shows the output .txt file that records the lips features of each frame:
 
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/lipdata.jpg" width="200px" height="200px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/lipdata.jpg" width="400px" height="400px">
 
 
 ###FUTURE WORK
