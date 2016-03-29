@@ -62,7 +62,11 @@ The following shows the output .txt file that records the lips features of each 
 
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/lipdata.jpg" width="500px" height="300px">
 
-
 ###FUTURE WORK
 
+The future work is to apply the extracted lips features to deception detection. As mentioned above, I plan to focus on the difference of frequency of lip pressing/biting or smiling of truth tellers and liars.
+
 ###REFERENCE
+
+- [Dlib example program](http://dlib.net/face_landmark_detection_ex.cpp.html)
+
