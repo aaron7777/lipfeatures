@@ -34,16 +34,28 @@ A library that allows you to draw graphics on the screen of any X server using C
 ####Face Components Detection
 Face detector is made using the classic Histogram of Oriented Gradients (HOG) feature combined with a linear classifier, an image pyramid,
 and sliding window detection scheme. Dlib provides a "shape_predictor_68_face_landmarks.dat" model, based on the iBUG 300-W dataset. The dataset has more than 10,000 images annotated with the 68-point convention.
-![ScreenShot](https://github.com/aaron7777/lipfeatures/blob/master/pic/figure_68_markup.jpg=250x250)
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/figure_68_markup.jpg" width="400px" height="188px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/figure_68_markup.jpg" width="200px" height="200px">
 
 ####Normalization & Feature Extraction
-
-
+Take use of dlib::get_face_chip_details to normalize the face and extract a copy of face that has been rotated upright, centered, and scaled to a standard size. Map the points we need from the original face to the normalized one. Then write the positions (x, y) to the output .txt file. One frame one line.
 
 ###COMPILING
 
+Use CMake to compile. Also, the face detector is fastest when compiled with at least SSE2 instructions enabled.
+
+```bash
+mkdir build
+cd build
+cmake .. -DUSE_SSE4_INSTRUCTIONS=ON
+cmake --build . --config Release
+```
+
 ###TEST
+I used PC camera to test whether feature detection works.
+The test result is satisfying:
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face1.jpg" width="200px" height="200px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face2.jpg" width="200px" height="200px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face3.jpg" width="200px" height="200px">
 
 ###FUTURE WORK
 
