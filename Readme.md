@@ -53,6 +53,7 @@ cmake --build . --config Release
 ###TEST
 I used PC camera to test whether feature detection works.
 The test result is satisfying. The small window stands for the normalized face.
+
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face1.jpg" width="200px" height="200px">
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face2.jpg" width="200px" height="200px">
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face3.jpg" width="200px" height="200px">
