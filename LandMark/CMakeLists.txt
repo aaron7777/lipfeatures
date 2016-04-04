@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 2.8)
-project( landmark )
-find_package( OpenCV REQUIRED )
-include(/Users/xinxu/Documents/study/mouth/dlib-18.18/dlib/cmake)
-add_executable( landmark landmark.cpp )
-TARGET_LINK_LIBRARIES(landmark ${OpenCV_LIBS} dlib)
