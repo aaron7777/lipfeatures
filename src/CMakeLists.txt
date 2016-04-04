@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( lipfeatures )
+find_package( OpenCV REQUIRED )
+include(/Users/xinxu/Documents/study/mouth/dlib-18.18/dlib/cmake)
+add_executable( lipfeatures main.cpp )
+TARGET_LINK_LIBRARIES(lipfeatures ${OpenCV_LIBS} dlib)
