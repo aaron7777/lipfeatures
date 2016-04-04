@@ -46,6 +46,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
@@ -55,6 +56,8 @@
 using namespace dlib;
 using namespace std;
 using namespace cv;
+
+
 
 // ----------------------------------------------------------------------------------------
 
@@ -69,11 +72,13 @@ int main(int argc, char** argv)
         if (argc == 1)
         {
             cout << "Call this program like this:" << endl;
-            cout << "./landmark [video name]" << endl;
+            cout << "./lipfeatures [video name]" << endl;
             return 0;
         }
 
+        //cv::VideoCapture cap(0);
         cv::VideoCapture cap(argv[1]);
+        
         image_window win;
 
         // We need a face detector.  We will use this to get bounding boxes for
@@ -89,7 +94,7 @@ int main(int argc, char** argv)
         // File to record lipfeatures 
         ofstream outfile;
         //outfile.open("/Users/xinxu/Desktop/lipfeatures/LandMark/lipdata.txt");
-        outfile.open("./lipdata.txt");
+        outfile.open("../lipdata.txt");
 
         int frameCounter = 0;
         image_window win_faces;
@@ -166,50 +171,57 @@ int main(int argc, char** argv)
             // Now let's view lines of lips on the screen.
             win.clear_overlay();
             win.set_image(cimg);
-            win.add_overlay(lines);
 
-            // View the entire face
-            //win.add_overlay(render_face_detections(shapes));
-      
+            if (faces.size() == 0) {
+                outfile << frameCounter++;
+                outfile << "," << 0 << endl;
+            }
+            else {
+                win.add_overlay(lines);
 
-            // We can also extract copies of each face that are cropped, rotated upright,
-            // and scaled to a standard size as shown here:
-            dlib::array<array2d<rgb_pixel> > face_chips;
-            std::vector<chip_details> face_details;
-            face_details = get_face_chip_details(shapes, 200, 0.2);
-            extract_image_chips(cimg, face_details, face_chips);
+                // View the entire face
+                //win.add_overlay(render_face_detections(shapes));
+          
 
-            // View the scaled/normalized face 
-            win_faces.set_image(tile_images(face_chips));
+                // We can also extract copies of each face that are cropped, rotated upright,
+                // and scaled to a standard size as shown here:
+                dlib::array<array2d<rgb_pixel> > face_chips;
+                std::vector<chip_details> face_details;
+                face_details = get_face_chip_details(shapes, 200, 0.2);
+                extract_image_chips(cimg, face_details, face_chips);
 
-            // Map the point from the original face to the normalized one
-            point_transform_affine p = get_mapping_to_chip(face_details[0]);
+                // View the scaled/normalized face 
+                win_faces.set_image(tile_images(face_chips));
 
-            // Record the landmarks(lip features) needed to the file 
-            point point_in_chip1, point_in_chip2, point_in_chip3, point_in_chip4;
-            point_in_chip1 = p(shapes[0].part(48));
-            point_in_chip2 = p(shapes[0].part(51));
-            point_in_chip3 = p(shapes[0].part(54));
-            point_in_chip4 = p(shapes[0].part(57));
+                // Map the point from the original face to the normalized one
+                point_transform_affine p = get_mapping_to_chip(face_details[0]);
 
-            outfile << frameCounter++;
-            outfile << ",";
-            outfile << point_in_chip1.x();
-            outfile << ",";
-            outfile << point_in_chip1.y();
-            outfile << ",";
-            outfile << point_in_chip2.x();
-            outfile << ",";
-            outfile << point_in_chip2.y();
-            outfile << ",";
-            outfile << point_in_chip3.x();
-            outfile << ",";
-            outfile << point_in_chip3.y();
-            outfile << ",";
-            outfile << point_in_chip4.x();
-            outfile << ",";
-            outfile << point_in_chip4.y();
-            outfile << endl;
+                // Record the landmarks(lip features) needed to the file 
+                point point_in_chip1, point_in_chip2, point_in_chip3, point_in_chip4;
+                point_in_chip1 = p(shapes[0].part(48));
+                point_in_chip2 = p(shapes[0].part(51));
+                point_in_chip3 = p(shapes[0].part(54));
+                point_in_chip4 = p(shapes[0].part(57));
+
+                outfile << frameCounter++;
+                outfile << ",";
+                outfile << point_in_chip1.x();
+                outfile << ",";
+                outfile << point_in_chip1.y();
+                outfile << ",";
+                outfile << point_in_chip2.x();
+                outfile << ",";
+                outfile << point_in_chip2.y();
+                outfile << ",";
+                outfile << point_in_chip3.x();
+                outfile << ",";
+                outfile << point_in_chip3.y();
+                outfile << ",";
+                outfile << point_in_chip4.x();
+                outfile << ",";
+                outfile << point_in_chip4.y();
+                outfile << endl;
+            }
         }
         outfile.close();
     }
