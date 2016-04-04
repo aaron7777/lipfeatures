@@ -46,17 +46,25 @@ Use CMake to compile. Also, the face detector is fastest when compiled with at l
 ```bash
 mkdir build
 cd build
-cmake .. -DUSE_SSE4_INSTRUCTIONS=ON
+cmake .. -DUSE_AVX_INSTRUCTIONS=ON
 cmake --build . --config Release
 ```
 
 ###TEST
-I used PC camera to test whether feature detection works.
+Firstly, I used PC camera to test whether feature detection works.
 The test result is satisfying. The small window stands for the normalized face.
 
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face1.jpg" width="200px" height="200px">
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face2.jpg" width="200px" height="200px">
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face3.jpg" width="200px" height="200px">
+
+Then I managed to input a video file from the dataset.
+The test result is also satisfying.
+
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face4.jpg" width="200px" height="200px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face5.jpg" width="200px" height="200px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face6.jpg" width="200px" height="200px">
+
 
 The following shows the output .txt file that records the lips features of each frame:
 
