@@ -44,6 +44,7 @@ int main(int argc, char** argv)
         {
             printf("Call this program like this:\n");
             printf("/lipfeatures [video name] [silent interval file name] [output file name]\n");
+            printf("eg: /lipfeatures ../../res/1ruthen.mp4 1interval.txt lipfeatures1.txt\n");
             return 0;
         }
 

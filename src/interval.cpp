@@ -27,7 +27,8 @@ int main(int argc, char** argv) {
 
 	if (argc < 4) {
 		printf("Call this program like this:\n");
-		printf("./lipinfo [describer file name] [question interval file name] [output file name]\n");
+		printf("./getinterval [describer file name] [question interval file name] [output file name]\n");
+		printf("eg: ./getinterval ../../res/3des-pamela.txt ../../res/3ques.txt ../../res/3interval\n");
         return 0;
     }
 
