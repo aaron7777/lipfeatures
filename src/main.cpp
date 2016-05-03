@@ -1,42 +1,3 @@
-// The contents of this file are in the public domain. See LICENSE_FOR_EXAMPLE_PROGRAMS.txt
-/*
-
-    This example program shows how to find frontal human faces in an image and
-    estimate their pose.  The pose takes the form of 68 landmarks.  These are
-    points on the face such as the corners of the mouth, along the eyebrows, on
-    the eyes, and so forth.  
-    
-
-
-    This face detector is made using the classic Histogram of Oriented
-    Gradients (HOG) feature combined with a linear classifier, an image pyramid,
-    and sliding window detection scheme.  The pose estimator was created by
-    using dlib's implementation of the paper:
-        One Millisecond Face Alignment with an Ensemble of Regression Trees by
-        Vahid Kazemi and Josephine Sullivan, CVPR 2014
-    and was trained on the iBUG 300-W face landmark dataset.  
-
-    Also, note that you can train your own models using dlib's machine learning
-    tools.  See train_shape_predictor_ex.cpp to see an example.
-
-    
-
-
-    Finally, note that the face detector is fastest when compiled with at least
-    SSE2 instructions enabled.  So if you are using a PC with an Intel or AMD
-    chip then you should enable at least SSE2 instructions.  If you are using
-    cmake to compile this program you can enable them by using one of the
-    following commands when you create the build project:
-        cmake path_to_dlib_root/examples -DUSE_SSE2_INSTRUCTIONS=ON
-        cmake path_to_dlib_root/examples -DUSE_SSE4_INSTRUCTIONS=ON
-        cmake path_to_dlib_root/examples -DUSE_AVX_INSTRUCTIONS=ON
-    This will set the appropriate compiler options for GCC, clang, Visual
-    Studio, or the Intel compiler.  If you are using another compiler then you
-    need to consult your compiler's manual to determine how to enable these
-    instructions.  Note that AVX is the fastest but requires a CPU from at least
-    2011.  SSE4 is the next fastest and is supported by most current machines.  
-*/
-
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing/render_face_detections.h>
 #include <dlib/image_processing.h>
@@ -44,9 +5,10 @@
 #include <dlib/image_io.h>
 #include <dlib/opencv.h>
 
-#include <iostream>
-#include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string>
+#include <vector>
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
@@ -57,9 +19,18 @@ using namespace dlib;
 using namespace std;
 using namespace cv;
 
-
-
 // ----------------------------------------------------------------------------------------
+
+class interval {
+    public:
+        int begin;
+        int end;
+        int num; // question num
+        interval(double b, double e, int n):begin(b),end(e),num(n) {}
+};
+
+cv::Mat debugImage;
+std::string main_window_name = "Capture - Face detection";
 
 int main(int argc, char** argv)
 {  
@@ -69,17 +40,51 @@ int main(int argc, char** argv)
         // process.  We will take these filenames in as command line arguments.
         // Dlib comes with example images in the examples/faces folder so give
         // those as arguments to this program.
-        if (argc == 1)
+        if (argc < 4)
         {
-            cout << "Call this program like this:" << endl;
-            cout << "./lipfeatures [video name]" << endl;
+            printf("Call this program like this:\n");
+            printf("/lipfeatures [video name] [silent interval file name] [output file name]\n");
             return 0;
         }
 
+        // Read silent interval file
+        FILE* f, *f1;
+        int begin, end;
+        int num;
+        std::vector<interval*> silentIntvl;
+        cv::Mat frame;
+
+        f = fopen(argv[2], "r");
+
+        if(f == NULL) {
+            printf("The silent interval file %s cannot be opened\n", argv[2]);
+            return 0;
+        }
+
+        while(fscanf(f, "%d %d %d", &num, &begin, &end) == 3) {
+            silentIntvl.push_back(new interval(begin, end, num));
+        }
+
+        fclose(f);
+
+        int intervalNum = silentIntvl.size();
+        int intervalCounter = 0;
+        if (intervalNum == 0) return 0;
+        bool ifRecord = false;
+        //begin = silentIntvl[0]->begin;
+        //end = silentIntvl[0]->end;
+        //num = silentIntvl[0]->num;
+
         //cv::VideoCapture cap(0);
         cv::VideoCapture cap(argv[1]);
+
+        int totalFrameNumber = cap.get(CV_CAP_PROP_FRAME_COUNT);
+        double fps = cap.get(CV_CAP_PROP_FPS);
         
-        image_window win;
+        printf("fps = %lf\n", fps);
+        printf("framenumber = %d\n", totalFrameNumber);
+        
+        //image_window win;
 
         // We need a face detector.  We will use this to get bounding boxes for
         // each face in an image.
@@ -91,144 +96,141 @@ int main(int argc, char** argv)
         shape_predictor sp;
         deserialize("../../res/shape_predictor_68_face_landmarks.dat") >> sp;
 
-        // File to record lipfeatures 
-        ofstream outfile;
-        //outfile.open("/Users/xinxu/Desktop/lipfeatures/LandMark/lipdata.txt");
-        outfile.open("../lipdata.txt");
+        f1 = fopen(argv[3], "w");
 
         int frameCounter = 0;
-        image_window win_faces;
+        //image_window win_faces;
+
+        long compTime;
+        struct timeval startRun, endFrame;
+
          // Grab and process frames until the main window is closed by the user.
-        while(!win.is_closed())
+        while(true)
         {
+            gettimeofday(&startRun, NULL);
             // Grab a frame
-            cv::Mat frame;
             cap >> frame;
-            // Turn OpenCV's Mat into something dlib can deal with.  Note that this just
-            // wraps the Mat object, it doesn't copy anything.  So cimg is only valid as
-            // long as frame is valid.  Also don't do anything to frame that would cause it
-            // to reallocate the memory which stores the image as that will make cimg
-            // contain dangling pointers.  This basically means you shouldn't modify frame
-            // while using cimg.
-            cv_image<bgr_pixel> cimg(frame);
+            frame.copyTo(debugImage);
 
-            // Detect faces 
-            std::vector<dlib::rectangle> faces = detector(cimg);
+            if(!frame.empty()) {
 
-            // Find the pose of each face. 
-            // Here: there is only one face.
-            std::vector<full_object_detection> shapes;
-            std::vector<dlib::image_window::overlay_line> lines;
-            const rgb_pixel color = rgb_pixel(0,255,0);
+                if (intervalCounter >= intervalNum) ifRecord = false;
+                else if (frameCounter < silentIntvl[intervalCounter]->begin) ifRecord = false;
+                else if (frameCounter > silentIntvl[intervalCounter]->end) ifRecord = false;
+                else ifRecord = true;
 
-            for (unsigned long i = 0; i < faces.size(); ++i) {
+                //printf("intervalCounter = %d\n", intervalCounter);
+                printf("frameCounter = %d\n", frameCounter);
+                printf("ifRecord = %d\n", ifRecord);
 
-                full_object_detection shape = sp(cimg, faces[i]);
-                /* Rectangles of each part of face */
-                /*
-                for (unsigned long m = 1; m <= 16; ++m) // Face
-                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+                // Turn OpenCV's Mat into something dlib can deal with.  Note that this just
+                // wraps the Mat object, it doesn't copy anything.  So cimg is only valid as
+                // long as frame is valid.  Also don't do anything to frame that would cause it
+                // to reallocate the memory which stores the image as that will make cimg
+                // contain dangling pointers.  This basically means you shouldn't modify frame
+                // while using cimg.
+                cv_image<bgr_pixel> cimg(frame);
 
-                for (unsigned long m = 28; m <= 30; ++m) // Nose (Upper)
-                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+                // Detect faces 
+                std::vector<dlib::rectangle> faces = detector(cimg);
 
-                for (unsigned long m = 18; m <= 21; ++m) // Left Brow
-                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+                // Find the pose of each face. 
+                // Here: there is only one face.
+                std::vector<full_object_detection> shapes;
+                //std::vector<dlib::image_window::overlay_line> lines;
+                const rgb_pixel color = rgb_pixel(0,255,0);
 
-                for (unsigned long m = 23; m <= 26; ++m) // Right Brow
-                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
+                for (unsigned long i = 0; i < faces.size(); ++i) {
 
-                for (unsigned long m = 31; m <= 35; ++m) // Nose (Lower)
-                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
-                lines.push_back(image_window::overlay_line(shape.part(30), shape.part(35), color));
+                    full_object_detection shape = sp(cimg, faces[i]);
+                    shapes.push_back(shape);
+                        
+                }
 
-                for (unsigned long m = 37; m <= 41; ++m) // Left Eye
-                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
-                lines.push_back(image_window::overlay_line(shape.part(36), shape.part(41), color));
+                // Now let's view lines of lips on the screen.
 
-                for (unsigned long m = 43; m <= 47; ++m) // Right Eye
-                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
-                lines.push_back(image_window::overlay_line(shape.part(42), shape.part(47), color));*/
+                if (faces.size() > 0) {
+                    if (ifRecord) {
+                        //win.add_overlay(lines);
 
-                for (unsigned long m = 49; m <= 59; ++m) // Lip (Outer)
-                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
-                lines.push_back(image_window::overlay_line(shape.part(48), shape.part(59), color));
+                        // View the entire face
+                        //win.add_overlay(render_face_detections(shapes));
+                  
 
-                for (unsigned long m = 61; m <= 67; ++m) // Lip (Inner)
-                    lines.push_back(image_window::overlay_line(shape.part(m), shape.part(m-1), color));
-                lines.push_back(image_window::overlay_line(shape.part(60), shape.part(67), color));
+                        // We can also extract copies of each face that are cropped, rotated upright,
+                        // and scaled to a standard size as shown here:
+                        dlib::array<array2d<rgb_pixel> > face_chips;
+                        std::vector<chip_details> face_details;
+                        face_details = get_face_chip_details(shapes, 200, 0.2);
+                        extract_image_chips(cimg, face_details, face_chips);
 
-                // Four points to be recorded (48, 51, 54, 57) 
-                /*
-                lines.push_back(image_window::overlay_line(shape.part(48), shape.part(51), color));
-                lines.push_back(image_window::overlay_line(shape.part(51), shape.part(54), color));
-                lines.push_back(image_window::overlay_line(shape.part(54), shape.part(57), color));
-                lines.push_back(image_window::overlay_line(shape.part(57), shape.part(48), color));*/
+                        // View the scaled/normalized face 
+                        //win_faces.set_image(tile_images(face_chips));
 
-                shapes.push_back(shape);
+                        // Map the point from the original face to the normalized one
+                        point_transform_affine p = get_mapping_to_chip(face_details[0]);
+
+                        // Record the landmarks(lip features) needed to the file 
+                        point point_in_chip1, point_in_chip2, point_in_chip3, point_in_chip4, point_in_chip5, point_in_chip6;
+                        point_in_chip1 = p(shapes[0].part(48));
+                        point_in_chip2 = p(shapes[0].part(51));
+                        point_in_chip3 = p(shapes[0].part(54));
+                        point_in_chip4 = p(shapes[0].part(57));
+                        point_in_chip5 = p(shapes[0].part(62));
+                        point_in_chip6 = p(shapes[0].part(66));
+
+                        fprintf(f1, "%d,%d,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld\n", 
+                            silentIntvl[intervalCounter]->num, frameCounter, point_in_chip1.x(), point_in_chip1.y(), 
+                                point_in_chip2.x(), point_in_chip2.y(), point_in_chip3.x(), point_in_chip3.y(),
+                                    point_in_chip4.x(), point_in_chip4.y(), point_in_chip5.x(), point_in_chip5.y(),
+                                        point_in_chip6.x(), point_in_chip6.y());
+                    }
+
+                    for (unsigned long m = 49; m <= 59; ++m) {// Lip (Outer)
+                        cv::Point pt(shapes[0].part(m).x(), shapes[0].part(m).y());
+                        cv::Point pt2(shapes[0].part(m-1).x(), shapes[0].part(m-1).y());
+                        line(debugImage, pt, pt2, 92384798);
+                    }
+                    cv::Point pt(shapes[0].part(48).x(), shapes[0].part(48).y());
+                    cv::Point pt2(shapes[0].part(59).x(), shapes[0].part(59).y());
+                    line(debugImage, pt, pt2, 92384798);
+
+                    for (unsigned long m = 61; m <= 67; ++m) {// Lip (Inner)
+                        cv::Point pt(shapes[0].part(m).x(), shapes[0].part(m).y());
+                        cv::Point pt2(shapes[0].part(m-1).x(), shapes[0].part(m-1).y());
+                        line(debugImage, pt, pt2, 92384798);
+                    }
+                    cv::Point pt3(shapes[0].part(60).x(), shapes[0].part(60).y());
+                    cv::Point pt4(shapes[0].part(67).x(), shapes[0].part(67).y());
+                    line(debugImage, pt3, pt4, 92384798);
+
+                    gettimeofday(&endFrame, NULL);
+                    compTime = (endFrame.tv_sec - startRun.tv_sec) * 1000 + (endFrame.tv_usec - startRun.tv_usec)/1000;
+                    //printf("compTime = %ld ms\n", compTime);
+                }
             }
-            
-            // Now let's view lines of lips on the screen.
-            win.clear_overlay();
-            win.set_image(cimg);
 
-            if (faces.size() == 0) {
-                outfile << frameCounter++;
-                outfile << "," << 0 << endl;
-            }
             else {
-                win.add_overlay(lines);
-
-                // View the entire face
-                //win.add_overlay(render_face_detections(shapes));
-          
-
-                // We can also extract copies of each face that are cropped, rotated upright,
-                // and scaled to a standard size as shown here:
-                dlib::array<array2d<rgb_pixel> > face_chips;
-                std::vector<chip_details> face_details;
-                face_details = get_face_chip_details(shapes, 200, 0.2);
-                extract_image_chips(cimg, face_details, face_chips);
-
-                // View the scaled/normalized face 
-                win_faces.set_image(tile_images(face_chips));
-
-                // Map the point from the original face to the normalized one
-                point_transform_affine p = get_mapping_to_chip(face_details[0]);
-
-                // Record the landmarks(lip features) needed to the file 
-                point point_in_chip1, point_in_chip2, point_in_chip3, point_in_chip4;
-                point_in_chip1 = p(shapes[0].part(48));
-                point_in_chip2 = p(shapes[0].part(51));
-                point_in_chip3 = p(shapes[0].part(54));
-                point_in_chip4 = p(shapes[0].part(57));
-
-                outfile << frameCounter++;
-                outfile << ",";
-                outfile << point_in_chip1.x();
-                outfile << ",";
-                outfile << point_in_chip1.y();
-                outfile << ",";
-                outfile << point_in_chip2.x();
-                outfile << ",";
-                outfile << point_in_chip2.y();
-                outfile << ",";
-                outfile << point_in_chip3.x();
-                outfile << ",";
-                outfile << point_in_chip3.y();
-                outfile << ",";
-                outfile << point_in_chip4.x();
-                outfile << ",";
-                outfile << point_in_chip4.y();
-                outfile << endl;
+                printf(" --(!) No captured frame -- Break!");
+                break;
             }
+
+            imshow(main_window_name,debugImage);
+
+            if (cv::waitKey(2) >= 0)  break;
+
+            if (intervalCounter < intervalNum) {
+                if (frameCounter == silentIntvl[intervalCounter]->end) intervalCounter++;
+            }
+            frameCounter++;
         }
-        outfile.close();
+
+        fclose(f1);
     }
     catch (exception& e)
     {
-        cout << "\nexception thrown!" << endl;
-        cout << e.what() << endl;
+        printf("\nexception thrown!\n");
+        printf("%s\n", e.what());
     }
 }
 
