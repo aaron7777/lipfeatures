@@ -107,7 +107,7 @@ Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were se
 | 2016-03-02_14-03-04-887-RUTHEH | 1  | 1 |
 | 2016-03-11_16-16-40-42-pamela3 | 1 | 1 |
 
-| Name | Avg Dis line (52, 58) | Avg Dis |
+| Name | Avg Dis (p52 - p58) | Avg Dis |
 | ------------ | ------------- | ------------ |
 | 2016-03-02_14-03-04-887-RUTHEH | Yes  | 2.09 |
 | 2016-03-11_16-16-40-42-pamela3 | No | 3.59 |
