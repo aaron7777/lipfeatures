@@ -112,7 +112,7 @@ Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were se
 | 2016-03-15_21-12-05-243-Asha4678 | 15.17 | 18.87 | 0.81 | 3.13 |
 | 2016-03-16_10-05-49-922-tarples | 19.97 | 18.32 | 5.03 | 4.83 |
 
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot1.png" width="300px" height="300px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot1.png" width="300px" height="300px" title="ruthen">
 
 
 
