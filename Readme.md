@@ -107,10 +107,10 @@ Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were se
 | 2016-03-02_14-03-04-887-RUTHEH | 1  | 1 |
 | 2016-03-11_16-16-40-42-pamela3 | 1 | 1 |
 
-| Filename | Tell Truth | Eye Activity Level |
+| Name | Avg Dis | Avg Dis |
 | ------------ | ------------- | ------------ |
-| 2015-09-22_10-08-05-149-taylan | Yes  | 2.09 |
-| 2015-09-21_22-48-13-207-qiyuan | No | 3.59 |
+| 2016-03-02_14-03-04-887-RUTHEH | Yes  | 2.09 |
+| 2016-03-11_16-16-40-42-pamela3 | No | 3.59 |
 
 ###FUTURE WORK
 
