@@ -103,7 +103,6 @@ The following shows the output lipfeatures1.txt file that records the lips featu
 ##RESULT
 Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were selected in the program.
 
-
 | Name |  Avg Dis (p52 - p58) in Section 1 | Avg Dis (p52 - p58) in Section 2 | Avg Dis (p63 - p67) in Section 1| Avg Dis (p63 - p67) in Section 2|
 | ------------ | ------------- | ------------ |------------- | ------------ |
 | 2016-03-02_14-03-04-887-RUTHEH | 12.99  | 11.71 | 1.63 | 5.48 |
@@ -118,13 +117,9 @@ Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were se
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot11.png" width="270px" height="250px">
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot12.png" width="270px" height="250px">
 
-
-
-
-
 ###FUTURE WORK
 
-The future work is to apply the extracted lips features to deception detection. As mentioned above, I plan to focus on the difference of frequency of lip pressing/biting or smiling of truth tellers and liars.
+As mentioned above, only 5 pairs of videos were selected due to unsynchronized frame and sound. The future work is to apply more raw videos of higher quality to further deception detection.
 
 ###REFERENCES
 
