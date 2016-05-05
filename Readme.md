@@ -113,10 +113,10 @@ Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were se
 | 2016-03-16_10-05-49-922-tarples | 19.97 | 18.32 | 5.03 | 4.83 |
 
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot1.png" width="300px" height="300px">
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot3.png" width="300px" height="300px">
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot8.png" width="300px" height="300px">
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot11.png" width="300px" height="300px">
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot12.png" width="300px" height="300px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot3.png" width="300px" height="250px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot8.png" width="300px" height="250px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot11.png" width="300px" height="250px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/src/plot12.png" width="300px" height="250px">
 
 
 
