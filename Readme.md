@@ -5,32 +5,50 @@ Previous research is focused on detecting eye-activity level features for decept
 
 ###PROBLEM STATEMENT
 
-Implement a program to help deception detection through extracting and analyzing the features of lips/mouth of a describer from some video on flimflam.me.
+Implement a program to help deception detection through extracting and analyzing the features of lips/mouth of a describer when answering questions of an interrogator from 15-FPS videos on flimflam.me. All significant lip features of the describer in the silent interval when he/she is answering a question should be captured.
 
-####Step 1 - Face Detection
+####Step 1 - Silent Interval Capture
+According to the file recording each time interval between the interrogator finished raising a question and the describer finished answering it, the program can extract all the silent intervals of the describer for each question. As the conversation contains two sections (general questions section and questions about the picture showed), section number (1 or 2) is also recorded together with each silent interval.
+####Step 2 - Face Detection
 For an input raw video, the program can capture frame by frame. For each frame, face detection is necessary before any feature extraction.
-####Step 2 - Lips Features Extraction
-Based on the result of face detection, four lip corners (left, right, highest and lowest) positions are extracted based on face normalization.
-####Step 3 - Analysis of Lips Motion
-With lips features of each frame, lips motion is recorded according to the time line. Frequency of lip pressing/biting or smiling can be analyzed to help judge whether a person is telling the truth or lying. 
+####Step 3 - Lips Features Extraction
+Based on the result of silent interval capture, only the frames included in the intervals are necessary. According to the result of face detection, six lip corners (point 49, 55, 52, 58, 63, 67 in the 68_face_landmark figure) positions of each necessary frame are extracted based on face normalization. 
+####Step 4 - Analysis of Lips Motion
+With lips features of corresponding frame, lips motion is recorded according to the time line. Frequency of lip pressing can be analyzed to help judge whether a person is telling the truth or lying. Average distance between upper and lower lips can be calculated to provide reference to analysis.
+
 #### Difficulties
 * Low quality video files with noise.
 * Limited number of raw videos.
+* Unsynchronized frame and sound of raw videos.
 * Faces with rotation/different sizes caused by camera position and describers' movement.
 * Fast and accurate computation needed to avoid latency
 
 ###BACKGROUND
 
-####OpenCV (version 2.4.12)
-A library aimed at real-time computer vision. Used for frame capture and basic image processing.
+Emphasis was put on how to extract the position points of lips after accurate face detection at the beginning. Haar-cascade Detection in OpenCV and Active Shape Model(ASM) library both can recognize face in high accuracy. However, they cannot capture the significant points from the detected faces perfectly. In the end, Dlib C++ library was found to have great performance in real-time face landmark extraction.
+
+The following are tools selected to deal with real-time face detection, lip features extraction, silent interval capture, and data analysis and plot.
 
 ####Dlib (version 18.18)
 An open source software written in C++, containing software components for dealing with image processing. Dlib is used for face detection and feature extraction.
 
+####OpenCV (version 2.4.12)
+A library aimed at real-time computer vision. Used for frame capture and basic image processing.
+
 ####Xlib (XQuartz version 2.7.8)
-A library that allows you to draw graphics on the screen of any X server using C language. XQuartz is the Apple Inc. version of X server, and X server is a component of the  X Window System, providing framework for a GUI enviroment. Xlib is used to showing and drawing image windows to indicate lips features on the face.
+A library that allows you to draw graphics on the screen of any X server using C language. XQuartz is the Apple Inc. version of X server, and X server is a component of the  X Window System, providing framework for a GUI enviroment.
+
+####Praat (version 6.0.17 of on MacOS)
+A computer program to analyze, synthesize, and manipulate speech, and create high-quality pictures for your articles and thesis. Praat is used to get the silent and sounding intervals of .wav files. Silence threshold (dB) is manually set.
+
+####Python (version 2.7.6) with numpy (version 1.8.0rc1) and matplotlib (version 1.3.1)
+To calculate the average distance between upper and lower lips and plot the distances for each frame.
 
 ###METHODS
+
+####Silent Interval Capture
+
+
 ####Face Components Detection
 Face detector is made using the classic Histogram of Oriented Gradients (HOG) feature combined with a linear classifier, an image pyramid,
 and sliding window detection scheme. Dlib provides a "shape_predictor_68_face_landmarks.dat" model based on the iBUG 300-W dataset. The dataset has more than 10,000 images annotated with the 68-point convention.
@@ -39,7 +57,8 @@ and sliding window detection scheme. Dlib provides a "shape_predictor_68_face_la
 ####Normalization & Feature Extraction
 Take use of dlib::get_face_chip_details to normalize the face and extract a copy of face that has been rotated upright, centered, and scaled to a standard size. Map the points we need from the original face to the normalized one. Then write the positions (x, y) to the output .txt file. One frame one line.
 
-###COMPILING
+
+###COMPILING & RUNNING
 
 Use CMake to compile. Also, the face detector is fastest when compiled with at least SSE2 instructions enabled ().
 
