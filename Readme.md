@@ -96,7 +96,7 @@ The test result is satisfying.
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/f2.png" width="200px" height="200px">
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/f3.png" width="200px" height="200px">
 
-The following shows the output lipfeatures1.txt file that records the lips features of each frame in the form of (section number, frame number, piont 49, 55, 52, 58, 63, 67 position):
+The following shows the output lipfeatures1.txt file that records the lips features of each frame in form of (section number, frame number, piont 49, 55, 52, 58, 63, 67 position):
 
 <img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/lipdata.png" width="500px" height="300px">
 
@@ -104,8 +104,8 @@ The following shows the output lipfeatures1.txt file that records the lips featu
 Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were selected in the program.
 | Name | Avg Distance (between point 52 & 58) in Section 1| Avg Distance (between point 63 & 67)  in Section 1|
 | ------------ | ------------- | ------------ |
-| 2016-03-02_14-03-04-887-RUTHEH |   |  |
-| 2016-03-11_16-16-40-42-pamela3 |  |  |
+| 2016-03-02_14-03-04-887-RUTHEH | 1  | 1 |
+| 2016-03-11_16-16-40-42-pamela3 | 1 | 1 |
 
 ###FUTURE WORK
 
