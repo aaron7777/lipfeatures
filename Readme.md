@@ -70,16 +70,22 @@ Given 1des-ruthen.txt (silent and sounding intervals of the describer) and 1ques
 ```bash
 ./getinterval ../res/1des-ruthen.txt ../res/1ques.txt ../res/1interval.txt
 ```
-
-
-
-Use CMake to compile. Also, the face detector is fastest when compiled with at least SSE2 instructions enabled ().
-
+####Lip features Extraction (main.cpp)
+Use CMake to compile. Also, the face detector is fastest when compiled with at least SSE2 instructions enabled.
 ```bash
 mkdir build
 cd build
 cmake .. -DUSE_AVX_INSTRUCTIONS=ON
 cmake --build . --config Release
+```
+Run as the following: ./lipfeatures [video name] [silent interval file name] [output file name]
+```bash
+./lipfeatures ../../res/2016-03-02_14-03-04-887-RUTHEH.mp4 ../../res/1interval.txt lipfeatures1.txt
+```
+####Plot (plot.py)
+Compile and run with one command line.
+```bash
+python plot.py
 ```
 
 ###TEST
