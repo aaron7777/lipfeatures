@@ -102,12 +102,9 @@ The following shows the output lipfeatures1.txt file that records the lips featu
 
 ##RESULT
 Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were selected in the program.
-| Name | Avg Distance in Section 1 | Avg Distance in Section 1 |
-| ------------ | ------------- | ------------ |
-| 2016-03-02_14-03-04-887-RUTHEH | 1  | 1 |
-| 2016-03-11_16-16-40-42-pamela3 | 1 | 1 |
 
-| Name | Avg Dis (p52 - p58) | Avg Dis |
+
+| Name | Avg Dis (p52 - p58) in section 1 | Avg Dis (p63 - p67) in section 1|
 | ------------ | ------------- | ------------ |
 | 2016-03-02_14-03-04-887-RUTHEH | Yes  | 2.09 |
 | 2016-03-11_16-16-40-42-pamela3 | No | 3.59 |
