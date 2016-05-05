@@ -104,9 +104,7 @@ The following shows the output lipfeatures1.txt file that records the lips featu
 Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were selected in the program.
 
 
-| Name |  Section 1 | Section 2 |
-| ------------ | ------------- | ------------ |
-| | Avg Dis (p52 - p58) | Avg Dis (p63 - p67) | Avg Dis (p52 - p58) | Avg Dis (p63 - p67) |
+| Name |  Avg Dis (p52 - p58) in Section 1 | Avg Dis (p52 - p58) in Section 2 | Avg Dis (p52 - p58) in Section 1| Avg Dis (p63 - p67) in Section 2|
 | ------------ | ------------- | ------------ |------------- | ------------ |
 | 2016-03-02_14-03-04-887-RUTHEH | Yes  | 2.09 |
 | 2016-03-11_16-16-40-42-pamela3 | No | 3.59 |
