@@ -98,7 +98,7 @@ The test result is satisfying.
 
 The following shows the output lipfeatures1.txt file that records the lips features of each frame in form of (section number, frame number, piont 49, 55, 52, 58, 63, 67 position):
 
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/lipdata.png" width="500px" height="300px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/lipdata.png" width="300px" height="400px">
 
 ##RESULT
 Due to unsynchronized frame and sound raw videos, only 5 pairs of videos were selected in the program.
