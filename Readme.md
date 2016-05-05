@@ -89,19 +89,12 @@ python plot.py
 ```
 
 ###TEST
-Firstly, I used PC camera to test whether feature detection works.
-The test result is satisfying. The small window stands for the normalized face.
+Also, take 2016-03-02_14-03-04-887-RUTHEH as an example to test lip features extraction.
+The test result is satisfying.
 
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face1.jpg" width="200px" height="200px">
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face2.jpg" width="200px" height="200px">
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face3.jpg" width="200px" height="200px">
-
-Then I managed to input a video file from the dataset.
-The test result is also satisfying.
-
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face4.jpg" width="200px" height="200px">
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face5.jpg" width="200px" height="200px">
-<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/face6.jpg" width="200px" height="200px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/f1.jpg" width="200px" height="200px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/f2.jpg" width="200px" height="200px">
+<img src="https://raw.githubusercontent.com/aaron7777/lipfeatures/master/pic/f3.jpg" width="200px" height="200px">
 
 
 The following shows the output .txt file that records the lips features of each frame:
